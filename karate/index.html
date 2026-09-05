@@ -6,13 +6,13 @@
 <title>全少空手 入賞者マップ</title>
 <link rel="icon" href="data:,">
 <meta name="description" content="全日本少年少女空手道選手権大会（第1回〜）の優勝・準優勝・第3位を都道府県ごとにヒートマップ表示。形／組手・男女・学年・大会回で絞り込めます。">
-<!-- Google Analytics: 測定IDを GA_ID に入れると有効になります -->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HXNLZWBTHW"></script>
 <script>
-  const GA_ID = 'G-XXXXXXXXXX';
-  if (/^G-[A-Z0-9]+$/.test(GA_ID) && GA_ID !== 'G-XXXXXXXXXX') {
-    const s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID; document.head.appendChild(s);
-    window.dataLayer = window.dataLayer || []; function gtag(){ dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', GA_ID);
-  }
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HXNLZWBTHW');
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,13 +34,13 @@
   select{font:inherit;font-size:16px;padding:8px 36px 8px 14px;border:1px solid var(--line);border-radius:10px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235c5257' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat right 14px center;appearance:none;color:var(--ink)}
   .stats{display:flex;gap:28px;padding:6px 32px 0;font-size:15px;color:var(--ink2)}
   .stats b{color:var(--ink);font-family:'JetBrains Mono',Consolas,monospace;font-size:22px;font-weight:600;margin-right:4px}
-  main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;padding:16px 32px 32px}
-  .mapwrap{position:relative;background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;min-height:560px}
+  main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;padding:12px 24px 24px}
+  .mapwrap{position:relative;background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;min-height:560px;height:calc(100vh - 230px)}
   svg{display:block;width:100%;height:100%;touch-action:none}
   .pref{stroke:#fff;stroke-width:.6;cursor:pointer;transition:opacity .15s;vector-effect:non-scaling-stroke}
   .pref:hover{stroke:var(--ink);stroke-width:1.2}
   .pref.selected{stroke:var(--ink);stroke-width:1.6}
-  .zoomhint{position:absolute;left:16px;bottom:14px;font-size:14px;color:var(--muted);background:rgba(255,255,255,.85);padding:6px 12px;border-radius:999px;pointer-events:none}
+  .zoomhint{position:absolute;right:16px;bottom:14px;font-size:14px;color:var(--muted);background:rgba(255,255,255,.85);padding:6px 12px;border-radius:999px;pointer-events:none}
   .zoombtns{position:absolute;right:14px;top:14px;display:flex;flex-direction:column;gap:6px}
   .zoombtns button{width:40px;height:40px;border:1px solid var(--line);background:#fff;border-radius:10px;font-size:22px;cursor:pointer;color:var(--ink2)}
   .zoombtns button:hover{color:var(--ink)}
@@ -49,7 +49,7 @@
   .legend .ticks{display:flex;justify-content:space-between;width:200px;font-family:'JetBrains Mono',Consolas,monospace}
   .tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:15px;box-shadow:var(--shadow);opacity:0;transition:opacity .1s;white-space:nowrap}
   .tip b{font-size:18px}
-  aside{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;max-height:calc(100vh - 140px);overflow:auto;position:sticky;top:16px}
+  aside{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;max-height:calc(100vh - 230px);overflow:auto;position:sticky;top:12px}
   aside h2{margin:0 0 4px;font-size:24px}
   aside .sub{color:var(--ink2);font-size:15px;margin-bottom:14px}
   aside ol{list-style:none;margin:0;padding:0}
@@ -71,6 +71,8 @@
   .tg{font:inherit;font-size:15px;padding:6px 13px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink2);cursor:pointer;line-height:1.2}
   .tg.on{background:var(--accent);border-color:var(--accent);color:#fff}
   .tg:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .tg.reset{border-color:var(--ink2);color:var(--ink);font-weight:600;margin-left:auto}
+  .tg.reset:hover{background:var(--accent-soft)}
   .range{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',Consolas,monospace;font-size:14px;color:var(--ink2)}
   .range input[type=range]{width:110px;accent-color:var(--accent)}
   .range b{color:var(--ink);font-weight:600;min-width:2.2em;text-align:center}
@@ -85,6 +87,7 @@
     header h1{font-size:24px}
     main{grid-template-columns:1fr;padding:12px 18px 24px}
     .mapwrap{min-height:420px;height:60vh}
+    main{padding:12px 18px 24px}
     aside{max-height:none;position:static}
     .stats{padding:4px 18px 0;gap:18px}
     .legend .bar,.legend .ticks{width:140px}
@@ -103,13 +106,14 @@
   <div class="fgroup" data-f="sex"><span class="lbl">性別</span><button class="tg on" data-v="M">男子</button><button class="tg on" data-v="F">女子</button></div>
   <div class="fgroup" data-f="grade"><span class="lbl">学年</span><button class="tg on" data-v="1">小1</button><button class="tg on" data-v="2">小2</button><button class="tg on" data-v="3">小3</button><button class="tg on" data-v="4">小4</button><button class="tg on" data-v="5">小5</button><button class="tg on" data-v="6">小6</button></div>
   <div class="fgroup"><span class="lbl">大会回</span><div class="range">第<b id="k-lo">1</b>回 <input type="range" id="kai-lo" min="1" max="26" value="1"> 〜 <input type="range" id="kai-hi" min="1" max="26" value="26"> 第<b id="k-hi">26</b>回</div></div>
+  <button class="tg reset" id="reset-all" title="絞り込みと地図を最初の状態に戻す">↺ リセット</button>
 </div>
 <div class="stats"><div><b id="st-total">–</b>人</div><div><b id="st-prefs">–</b>都道府県</div><div>データ更新 <span id="st-date">–</span></div></div>
 <main>
   <div class="mapwrap" id="mapwrap">
     <svg id="map"></svg>
     <div class="legend"><div id="legend-title">記事数</div><div class="bar" id="legend-bar"></div><div class="ticks"><span id="lg-min">0</span><span id="lg-max">–</span></div></div>
-    <div class="zoombtns"><button id="zin" title="拡大">＋</button><button id="zout" title="縮小">－</button><button id="zreset" title="全体表示">⌂</button></div>
+    <div class="zoombtns"><button id="zin" title="拡大">＋</button><button id="zout" title="縮小">－</button><button id="zreset" title="地図を全体表示に戻す">⌂</button></div>
     <div class="zoomhint">都道府県をクリック／拡大すると入賞者名が表示されます</div>
     <div class="tip" id="tip"></div>
   </div>
@@ -134,6 +138,8 @@ const tip = document.getElementById('tip');
 const g = svg.append('g');
 const gPref = g.append('g');
 const gLabels = g.append('g');
+const gOki = svg.append('g').attr('class', 'oki'); // 沖縄は左上に別枠で表示（拡大縮小の対象外）
+const okiProj = d3.geoMercator(); const okiPath = d3.geoPath(okiProj);
 let W = wrap.clientWidth, H = wrap.clientHeight;
 const projection = d3.geoMercator();
 const path = d3.geoPath(projection);
@@ -154,8 +160,14 @@ function fit() {
   W = wrap.clientWidth; H = wrap.clientHeight;
   svg.attr('viewBox', `0 0 ${W} ${H}`);
   // 本土＋沖縄本島の範囲に合わせる（南鳥島・沖ノ鳥島などで縮まないように）
-  projection.fitExtent([[24, 24], [W - 24, H - 24]], { type: 'Polygon', coordinates: [[[127.5, 45.7], [146.2, 45.7], [146.2, 26.0], [127.5, 26.0], [127.5, 45.7]]] });
+  // 本土（九州南端〜北海道）に合わせる。沖縄は別枠
+  projection.fitExtent([[8, 8], [W - 8, H - 8]], { type: 'Polygon', coordinates: [[[128.3, 45.6], [146.0, 45.6], [146.0, 30.3], [128.3, 30.3], [128.3, 45.6]]] });
   gPref.selectAll('path').attr('d', path);
+  const bw = Math.min(200, W * 0.22), bh = bw * 0.75, bx = 16, by = 86;
+  okiProj.fitExtent([[bx + 8, by + 8], [bx + bw - 8, by + bh - 8]], { type: 'Polygon', coordinates: [[[127.6, 26.9], [128.4, 26.9], [128.4, 26.05], [127.6, 26.05], [127.6, 26.9]]] });
+  gOki.selectAll('path.pref').attr('d', okiPath);
+  gOki.selectAll('rect').data([0]).join('rect').attr('x', bx).attr('y', by).attr('width', bw).attr('height', bh).attr('fill', 'none').attr('stroke', 'var(--line)').attr('rx', 8);
+  gOki.selectAll('text').data([0]).join('text').attr('x', bx + 10).attr('y', by + bh - 8).attr('font-size', 12).attr('fill', 'var(--muted)').text('沖縄県');
   renderLabels();
 }
 
@@ -179,7 +191,7 @@ function paint() {
   const vals = PREFS.map(p => value(c, p));
   const max = d3.max(vals) || 1;
   color.domain([0, max]);
-  gPref.selectAll('path').attr('fill', d => { const v = value(c, d.properties.nam_ja); return v > 0 ? color(v) : 'var(--zero)'; });
+  svg.selectAll('path.pref').attr('fill', d => { const v = value(c, d.properties.nam_ja); return v > 0 ? color(v) : 'var(--zero)'; });
   document.getElementById('legend-title').textContent = F.mode === 'win' ? '優勝者数' : '入賞者数（優勝〜3位）';
   document.getElementById('legend-bar').style.background = `linear-gradient(90deg, ${[0,.1,.25,.5,.75,1].map(t => color(t * max)).join(',')})`;
   document.getElementById('lg-max').textContent = mode === 'per' ? max.toFixed(1) : max;
@@ -209,9 +221,9 @@ function renderPanel(c) {
 
 function select(pref, zoomTo) {
   selected = pref;
-  gPref.selectAll('path').classed('selected', d => d.properties.nam_ja === pref);
+  svg.selectAll('path.pref').classed('selected', d => d.properties.nam_ja === pref);
   renderPanel(counts());
-  if (pref && zoomTo) {
+  if (pref && zoomTo && pref !== '沖縄県') {
     const f = features.find(d => d.properties.nam_ja === pref);
     const [[x0, y0], [x1, y1]] = path.bounds(f);
     const k = Math.min(12, 0.8 / Math.max((x1 - x0) / W, (y1 - y0) / H));
@@ -230,6 +242,7 @@ function renderLabels() {
   const c = counts();
   for (const f of features) {
     const name = f.properties.nam_ja;
+    if (name === '沖縄県') continue;
     const [[x0, y0], [x1, y1]] = path.bounds(f._main || f);
     if (x1 < vx0 || x0 > vx0 + vw || y1 < vy0 || y0 > vy0 + vh) continue; // 画面外
     const seen = new Set();
@@ -269,7 +282,7 @@ Promise.all([d3.json('../data/japan.topojson'), d3.json('../data/karate.json')])
     f._main = best;
   }
   document.getElementById('st-date').textContent = (json.generated || '').slice(0, 10);
-  gPref.selectAll('path').data(features).join('path').attr('class', 'pref')
+  const handlers = sel => sel
     .on('mousemove', (ev, d) => {
       const c = counts(); const n = d.properties.nam_ja;
       tip.innerHTML = `<b>${n}</b><br>${c[n]}人`;
@@ -278,6 +291,9 @@ Promise.all([d3.json('../data/japan.topojson'), d3.json('../data/karate.json')])
     })
     .on('mouseleave', () => tip.style.opacity = 0)
     .on('click', (ev, d) => select(d.properties.nam_ja, true));
+  handlers(gPref.selectAll('path').data(features.filter(f => f.properties.nam_ja !== '沖縄県')).join('path').attr('class', 'pref'));
+  const oki = features.find(f => f.properties.nam_ja === '沖縄県');
+  handlers(gOki.selectAll('path.pref').data([{ ...oki, geometry: oki._main }]).join('path').attr('class', 'pref'));
   fit(); paint();
 });
 // フィルタ操作
@@ -301,6 +317,13 @@ const lo = document.getElementById('kai-lo'), hi = document.getElementById('kai-
 const onRange = () => { let a = +lo.value, b = +hi.value; if (a > b) [a, b] = [b, a]; F.lo = a; F.hi = b;
   document.getElementById('k-lo').textContent = a; document.getElementById('k-hi').textContent = b; refresh(); };
 lo.oninput = onRange; hi.oninput = onRange;
+document.getElementById('reset-all').onclick = () => {
+  for (const key of ['bumon', 'sex', 'grade']) { F[key].clear(); document.querySelectorAll(`.fgroup[data-f=${key}] .tg`).forEach(b => { b.classList.add('on'); F[key].add(key === 'grade' ? +b.dataset.v : b.dataset.v); }); }
+  F.mode = 'all'; document.querySelectorAll('.tg[data-mode]').forEach(b => b.classList.toggle('on', b.dataset.mode === 'all'));
+  lo.value = lo.min; hi.value = hi.max; F.lo = +lo.min; F.hi = +hi.max;
+  document.getElementById('k-lo').textContent = lo.min; document.getElementById('k-hi').textContent = hi.max;
+  select(null); svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity); refresh();
+};
 window.addEventListener('resize', () => { fit(); });
 </script>
 </body>
