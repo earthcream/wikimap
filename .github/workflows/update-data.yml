@@ -12,12 +12,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
-      - name: Fetch libraries and map (only if missing)
+      - name: Fetch libraries and map
         run: |
           mkdir -p vendor data
-          [ -f vendor/d3.min.js ] || curl -sSL -o vendor/d3.min.js https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js
-          [ -f vendor/topojson-client.min.js ] || curl -sSL -o vendor/topojson-client.min.js https://cdnjs.cloudflare.com/ajax/libs/topojson-client/3.1.0/topojson-client.min.js
-          [ -f data/japan.topojson ] || curl -sSL -o data/japan.topojson https://raw.githubusercontent.com/dataofjapan/land/master/japan.topojson
+          curl -fsSL -o vendor/d3.min.js https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js
+          curl -fsSL -o vendor/topojson-client.min.js https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js
+          [ -f data/japan.topojson ] || curl -fsSL -o data/japan.topojson https://raw.githubusercontent.com/dataofjapan/land/master/japan.topojson
       - name: Build metal.json
         run: node scripts/build-metal.mjs
       - name: Commit
