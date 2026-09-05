@@ -20,6 +20,10 @@ jobs:
           [ -f data/japan.topojson ] || curl -fsSL -o data/japan.topojson https://raw.githubusercontent.com/dataofjapan/land/master/japan.topojson
       - name: Build metal.json
         run: node scripts/build-metal.mjs
+      - name: Build karate.json (from data/*.xlsx)
+        run: |
+          pip install -q openpyxl
+          python scripts/build-karate.py
       - name: Commit
         run: |
           git config user.name "github-actions[bot]"
