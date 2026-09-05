@@ -29,7 +29,7 @@
   main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;padding:16px 32px 32px}
   .mapwrap{position:relative;background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;min-height:560px}
   svg{display:block;width:100%;height:100%;touch-action:none}
-  .pref{stroke:#fff;stroke-width:.6;cursor:pointer;transition:opacity .15s}
+  .pref{stroke:#fff;stroke-width:.6;cursor:pointer;transition:opacity .15s;vector-effect:non-scaling-stroke}
   .pref:hover{stroke:var(--ink);stroke-width:1.2}
   .pref.selected{stroke:var(--ink);stroke-width:1.6}
   .zoomhint{position:absolute;left:16px;bottom:14px;font-size:14px;color:var(--muted);background:rgba(255,255,255,.85);padding:6px 12px;border-radius:999px;pointer-events:none}
@@ -125,7 +125,6 @@ const color = d3.scaleSequentialSqrt(d3.interpolateRgb.gamma(1.6)('#f7e1e7', '#7
 
 const zoom = d3.zoom().scaleExtent([1, 14]).on('zoom', (ev) => {
   g.attr('transform', ev.transform); currentK = ev.transform.k;
-  gPref.selectAll('path').attr('stroke-width', .6 / currentK);
   renderLabels();
 });
 svg.call(zoom);
@@ -221,11 +220,11 @@ function renderLabels() {
   const c = counts();
   for (const f of features) {
     const name = f.properties.nam_ja;
-    const [[x0, y0], [x1, y1]] = path.bounds(f);
+    const [[x0, y0], [x1, y1]] = path.bounds(f._main || f);
     if (x1 < vx0 || x0 > vx0 + vw || y1 < vy0 || y0 > vy0 + vh) continue; // 画面外
     const rows = people.filter(p => p.pref === name);
     if (!rows.length) continue;
-    const [cx, cy] = path.centroid(f);
+    const [cx, cy] = path.centroid(f._main || f);
     const fs = 11 / currentK, lh = 14 / currentK, colW = 78 / currentK;
     const maxRows = Math.max(2, Math.floor((y1 - y0) * 0.7 / lh));
     const maxCols = Math.max(1, Math.floor((x1 - x0) * 0.7 / colW));
@@ -248,6 +247,13 @@ function renderLabels() {
 Promise.all([d3.json('../data/japan.topojson'), d3.json('../data/metal.json')]).then(([topo, json]) => {
   data = json;
   features = topojson.feature(topo, topo.objects[Object.keys(topo.objects)[0]]).features;
+  // ラベル配置用：最大の島（本体）の範囲を都道府県ごとに記録（離島でbboxが伸びないように）
+  for (const f of features) {
+    const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+    let best = null, bestA = -1;
+    for (const c of polys) { const g = { type: 'Polygon', coordinates: c }; const a = Math.abs(d3.geoArea(g)); if (a > bestA) { bestA = a; best = g; } }
+    f._main = best;
+  }
   document.getElementById('st-date').textContent = (json.generated || '').slice(0, 10);
   gPref.selectAll('path').data(features).join('path').attr('class', 'pref')
     .on('mousemove', (ev, d) => {
