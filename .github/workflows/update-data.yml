@@ -1,0 +1,29 @@
+name: Update data from Wikipedia
+on:
+  workflow_dispatch:        # 手動実行（Actionsタブの「Run workflow」）
+  schedule:
+    - cron: '0 18 1 * *'    # 毎月1日 03:00 JST
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Fetch libraries and map (only if missing)
+        run: |
+          mkdir -p vendor data
+          [ -f vendor/d3.min.js ] || curl -sSL -o vendor/d3.min.js https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js
+          [ -f vendor/topojson-client.min.js ] || curl -sSL -o vendor/topojson-client.min.js https://cdnjs.cloudflare.com/ajax/libs/topojson-client/3.1.0/topojson-client.min.js
+          [ -f data/japan.topojson ] || curl -sSL -o data/japan.topojson https://raw.githubusercontent.com/dataofjapan/land/master/japan.topojson
+      - name: Build metal.json
+        run: node scripts/build-metal.mjs
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add vendor data
+          git diff --cached --quiet || git commit -m "data: update from Wikipedia ($(date -u +%F))"
+          git push
